@@ -109,20 +109,20 @@ def main(filename):
 
 
 if __name__ == '__main__':
-  for i in range(8):
-    start_time=time.time()
-    j=i
-    file_name="IDtest"+ str(j) +'.jpg'
-    print("IDcard "+ str(j)+" reading....\n")
-    main(file_name)
-    end_time=time.time()
-    print("Spending Time:",end_time-start_time,"\n")
+  # for i in range(8):
+  #   start_time=time.time()
+  #   j=i
+  #   file_name="IDtest"+ str(j) +'.jpg'
+  #   print("IDcard "+ str(j)+" reading....\n")
+  #   main(file_name)
+  #   end_time=time.time()
+  #   print("Spending Time:",end_time-start_time,"\n")
 
   
-  # start_time=time.time()
-  # file_name="ID.jpg"
-  # print(file_name + " reading....\n")
-  # main(file_name)
-  # end_time=time.time()
-  # print("Spending Time:",end_time-start_time,"\n")
+  start_time=time.time()
+  file_name="IDcard.jpg"
+  print(file_name + " reading....\n")
+  main(file_name)
+  end_time=time.time()
+  print("Spending Time:",end_time-start_time,"\n")
   
