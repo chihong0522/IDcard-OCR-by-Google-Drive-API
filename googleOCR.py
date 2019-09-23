@@ -64,15 +64,37 @@ def getIDcardinfo_1(txt_file):
         name[0] = re.sub(cop,"", name[0])
         name[0] = re.sub("姓","", name[0])
         name[0] = re.sub("名","", name[0])
+
+        name.append(name[0][0])
+        name.append(name[0][1:4])
+        del name[0]
+
       birth=re.findall(u"民國\d{2,3}年\d{1,2}月\d{1,2}日",opt_text)
+
+      if len(birth)> 1:
+        del birth[1]     
+        
+        birthday=re.findall('[0-9]{1,3}',birth[0])
+        birthday=list(map(int,birthday))   
+        birthday[0]=birthday[0] + 1911
+
       getting_Date=re.findall(u"民國\d{2,3}年\d{1,2}月\d{1,2}日.+發",opt_text)
+
+      if len(getting_Date)>0 :
+
+        getting_status=re.findall('補發|換發',getting_Date[0])
+        getting_Date=re.findall('[0-9]{1,3}',getting_Date[0])
+        getting_Date=list(map(int,getting_Date))   
+        getting_Date[0]=getting_Date[0] + 1911
+        
+
+
       personal_ID=re.findall('[A-Z]{0,1}[0-9]{9}',opt_text)
       # print(all_text)
-      if len(birth)> 1:
-        del birth[1]
       
-      print(name,birth,getting_Date,personal_ID)
-      return name,birth,getting_Date,personal_ID
+
+      print(name,birthday,getting_Date,getting_status,personal_ID)
+      return name,birthday,getting_Date,getting_status,personal_ID
     else :
       print("請確認上傳文件是否正確")
 
@@ -95,15 +117,34 @@ def getIDcardinfo_2(txt_file):
     print(parents_name)
 
     address=re.sub("[0-9]{10}","",opt_text)
-    address=re.findall('[\u4e00-\u9fa5]{2}[市縣][\u4e00-\u9fa50-9]{2,4}[鄉鎮市區][\u4e00-\u9fa50-9\s\n]+',address)
-
+    address=re.findall('[\u4e00-\u9fa5]{2}[市縣][\u4e00-\u9fa50-9]{2,4}[鄉鎮市區][\u4e00-\u9fa50-9\s\n]+[號樓室0-9$]',address)
+    
     if len(address)>0: 
       cop2 = re.compile(u"住址|址|任址")
       address[0]=re.sub(cop2,"",address[0])
       address[0]=re.sub("\n|\s","",address[0])
-      
+
     print(address)
-    return parents_name,address
+
+    address_1=re.findall('[\u4e00-\u9fa5]{2}[市縣]',address[0])
+    address_2=re.findall('[\u4e00-\u9fa50-9]{2,4}[鄉鎮市區]',address[0])
+
+    
+    if address_2[0] == address_1[0]:
+      del address_2[0]
+
+    if len(address_1)>1:
+      address_3=re.sub(address_1[0]+address_1[1],"",address[0])
+      address_1.append(address_3)
+    else:
+      address_3=re.sub(address_1[0]+address_2[0],"",address[0])
+      address_1.append(address_2[0])
+      address_1.append(address_3)
+
+    
+    print(address_1)
+
+    return parents_name,address_1
   else :
     print("請確認上傳文件是否正確")
 
@@ -181,9 +222,9 @@ def main(filename,card_type):
 if __name__ == '__main__':
     
   start_time=time.time()
-  file_name="cooper_IDH.jpg"
+  file_name="Kevin_ID.jpg"
   print("Img : " + file_name + " reading....\n")
-  main(file_name,3) 
+  main(file_name,1) 
   #身分證正面:1
   #身分證背面:2
   #健保卡正面:3
